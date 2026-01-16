@@ -1,0 +1,33 @@
+Recomendações onde hospedar seus projetos.
+
+Onde Hospedar:
+Tipo de Projeto              | Complexidade        | Recomendação Ideal      | Diferencial
+Site Institucional           | Portfólio           | Baixa (Apenas Frontend) | Vercel | Velocidade e SEO superiores.
+Web App com Login e Dados    | Média (Full-stack)  | Firebase                | Banco de Dados e Auth nativos.
+Jogos 2D / 3D (Web)          | Média/Alta (Assets) | Firebase / Netlify      | Boa entrega de arquivos pesados.
+Sistemas Robustos (Saas/ERP) | Alta (Backend/APIs) | Firebase + Functions    | Escalabilidade automática do Google.
+
+Detalhamento por Tipo de Sistema:
+1. Sites Estáticos (Frontend):
+São sites que não processam dados no servidor, tudo acontece no navegador do usuário.
+Exemplos: Portfólio pessoal, Landing Pages de vendas, sites de notícias simples.
+Onde usar: Vercel ou GitHub Pages.
+Por que: São gratuitos, oferecem HTTPS automático e o deploy é feito em segundos via GitHub.
+
+2. Web Applications (Full-stack):
+Sistemas que precisam identificar o usuário e salvar informações de forma permanente.
+Exemplos: Gerenciadores de tarefas (Todo list), E-commerce, Redes Sociais, Dashboards de controle financeiro.
+Onde usar: Firebase.
+Por que: No Firebase, você não precisa configurar um servidor Node.js separado. Você usa o Firestore (Banco de dados) e o Firebase Auth via CDN diretamente no seu JavaScript.
+
+3. Web Games:
+Projetos que exigem alta performance no carregamento de imagens, sons e modelos 3D.
+Exemplos: Clones de Mario (2D), Shooters espaciais, simulações em Three.js.
+Onde usar: Firebase Hosting.
+Por que: Ele possui uma CDN (Rede de Entrega de Conteúdo) global. Isso significa que os arquivos do seu jogo são baixados de um servidor próximo ao jogador, reduzindo o lag de carregamento.
+
+4. Sistemas Robustos e APIs:
+Sistemas que executam lógica pesada ou secreta que não pode ficar exposta no código do navegador (como processamento de pagamentos).
+Exemplos: Sistemas de checkout, automação de e-mails, bots, integração com APIs pagas (OpenAI, Stripe).
+Onde usar: Firebase Cloud Functions.
+Por que: É o conceito de Serverless. Você escreve funções em JavaScript/Node.js que só rodam quando chamadas. Você não paga por um servidor ligado 24h, apenas pelos milissegundos que a função rodar.
