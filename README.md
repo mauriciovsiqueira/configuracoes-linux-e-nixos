@@ -5,21 +5,21 @@ Configurações linux e mais com o NixOS.
 
 *Para aprender a dominar o NixOS, siga este roteiro prático. Ele cobre desde a alteração de uma configuração simples até a atualização de versão do sistema.*
 
-## Instalação do NixOS.
-*Faça a instalação normal dele*
+## Configuração do NixOS.
+*Depois de ter feito a instalação do NixOS.*
 
-**Primeira Atualização Geral**
+**Primeira Atualização Geral.**  
 *Mesmo que a ISO seja recente, os pacotes mudam rápido. Sincronize o sistema:*
 ```bash
 sudo nix-channel --update
 sudo nixos-rebuild switch --upgrade
 ```
 
-**O Fluxo de Trabalho Básico (Configurar):**
+**O Fluxo de Trabalho Básico (Configurar).**  
 *No NixOS, você não instala coisas "soltas". Você as descreve no arquivo central.*
 
-Abra o arquivo: sudo nano /etc/nixos/configuration.nix e copie esse aqui:  
-*Obs.: Esse é minha configuração!!!*
+Abra o arquivo sudo nano /etc/nixos/configuration.nix e copie esse aqui e cole no seu config.nix:  
+*Obs.: Esse é minha configuração, você pode adaptar para seu uso*
 ```bash
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
@@ -190,13 +190,13 @@ Abra o arquivo: sudo nano /etc/nixos/configuration.nix e copie esse aqui:
 } 
 ```
 
-Sincronize: 
+**Sincronize (faça isso sempre que modificar o config.nix):** 
 ```bash
 sudo nixos-rebuild switch
 ```
-*Obs.: Reinicie o pc, nesse caso vai ter que fazer essa primeira vez*
+*Obs.: Reinicie o pc, nesse caso vai ter que fazer essa primeira vez, pois está fazendo depois da instalação e depois não precisa reiniciar de novo quando modificar o arquivo novamente*
 
-**Manutenção Semanal (Atualizar):**
+**Manutenção Semanal (Atualizar).**  
 *Faça isso uma vez por semana para manter o sistema seguro e em dia.*
 
 Sincronize e atualize tudo: 
@@ -206,17 +206,16 @@ sudo nixos-rebuild switch --upgrade
 
 *O que isso faz: Baixa as definições novas do canal e já aplica no seu sistema.*
 
-**Habilite o "Não Livre" (Unfree).**
-*Muitos programas (como Google Chrome, Discord, Drivers Nvidia) são proprietários. Para permitir que o NixOS os instale, adicione esta linha fora de qualquer bloco (geralmente no topo ou final do arquivo):*
-nixpkgs.config.allowUnfree = true;
+**Habilite o "Não Livre" (Unfree).**  
+*Muitos programas (como Google Chrome, Discord, Drivers Nvidia) são proprietários. Para permitir que o NixOS os instale, adicione esta linha fora de qualquer bloco (geralmente no topo ou final do arquivo) nixpkgs.config.allowUnfree = true;*
 
 *Obs.: Ele já vai estar habilitado, na instalação normal você vai marcar ela.*
 
-**Instalar Programas Temporários ou Permanentes:**
+**Instalar Programas Temporários ou Permanentes.**  
 *Uma das melhores funções do NixOS para quem está aprendendo.*
 *Caso não tenha feito na config.nix e queira só verificar se o programa está funcionando bem.*
 
-Quer usar o vim ou o htop só agora:
+Quer usar o vim ou o htop só agora (temporário):
 ```bash
 nix-shell -p vim
 ```
@@ -229,22 +228,25 @@ nix-env -iA nixos.vim
 ```
 
 Na config.nix (ele fica para todos os usuários):
+```bash
+environment.systemPackages = with pkgs; [  
+  git  
+  vlc  
+  vscode  
+  Adicione qualquer programa aqui (veja o nome correto no site: search.nixos.org)
+];  
+```
 
-environment.systemPackages = with pkgs; [
-  git
-  vlc
-  vscode
-  
-  *Adicione o que quiser aqui*
-];
+**Drivers de Vídeo (Se tiver placa dedicada).**  
+*Na config.nix adicione:*  
+```bash
+services.xserver.videoDrivers = [ "nvidia" ];
+hardware.opengl.enable = true;.
+```
 
-**Drivers de Vídeo (Se tiver placa dedicada).**
-*Na config.nix:*
-Adicione services.xserver.videoDrivers = [ "nvidia" ]; e hardware.opengl.enable = true;.
-
-**Limpeza de Disco (Faxina):**
-*Como o NixOS guarda versões antigas (gerações), o disco pode encher.*
-*Caso não tenha colocado na config.nix*
+**Limpeza de Disco (Faxina).**  
+*Como o NixOS guarda versões antigas (gerações), o disco pode encher.*  
+*Caso não tenha colocado na config.nix*  
 
 Remova o que é velho: 
 ```bash
@@ -255,13 +257,14 @@ sudo nix-collect-garbage -d
 
 Configure a Limpeza Automática:
 *Para não ter que se preocupar com o disco enchendo com versões antigas, adicione isso ao seu configuration.nix:*
-
+```bash
 nix.settings.auto-optimise-store = true;
 nix.gc = {
   automatic = true;
   dates = "weekly";
   options = "--delete-older-than 30d";
 };
+```
 
 **Troca de Versão (Upgrade de 6 meses).**
 *Quando sair uma versão nova (ex: mudar da 25.11 para a 26.05).*
@@ -281,58 +284,39 @@ Migre o sistema:
 sudo nixos-rebuild switch --upgrade
 ```
 
-**O Botão de Pânico (Segurança):**
-*Se você fizer algo errado e o sistema não ligar ou o ambiente gráfico sumir:*
-
+**O Botão de Pânico (Segurança).**  
+*Se você fizer algo errado e o sistema não ligar ou o ambiente gráfico sumir:*  
 Reinicie o computador.
-
 No menu inicial (Boot), escolha "NixOS - All configurations".
-
 Selecione a versão de ontem ou a última que funcionava.
-
 O sistema iniciará normalmente. 
 
-*Para tornar essa versão a "oficial" de novo, basta rodar sudo nixos-rebuild switch enquanto estiver nela.*
+*Para tornar essa versão a "oficial" de novo, basta rodar sudo nixos-rebuild switch enquanto estiver nela.*  
 
 | Ação | Comando |
 | :--- | :--- |
 | **`Aplicar mudança na config`** | sudo nixos-rebuild switch |
 | **`Atualização semanal`** | sudo nixos-rebuild switch --upgrade |
 | **`Testar pacote rápido`** | nix-shell -p pacote |
-| **`git commit -m "..."`** | Cria uma nova versão oficial do código com uma etiqueta descritiva. |
+| **`Instalar pacote permanente no usuário local`** | nix-env -iA nixos.vim |
 | **`Limpar versões antigas`** | sudo nix-collect-garbage -d |
 | **`Desfazer última mudança`** | sudo nixos-rebuild switch --rollback |
 
 *Parabéns pela instalação! O NixOS recém-instalado é como uma tela em branco. Aqui está o roteiro do que você deve fazer para deixar o sistema pronto para o uso diário:*
 
+**Observaçôes finais.**
+
+**Rotina do Usuário (Cronograma).**  
+Toda Semana: Rode sudo nixos-rebuild switch --upgrade para manter segurança e apps em dia.  
+Uma vez por mês: Rode sudo nix-collect-garbage -d para não lotar o HD com versões antigas. 
+sempre que mudar o config.nix: sudo nixos-rebuild switch para aplicar as mudanças.  
+
+**Regras de Ouro.**  
+Guarde uma cópia do seu arquivo configuration.nix no seu Google Drive ou GitHub. Se você precisar formatar o PC um dia, basta colar esse arquivo em um NixOS novo e, em 5 minutos, o seu PC estará exatamente como era antes.  
+Não reinicie à toa: Só é necessário para Kernel, Drivers de vídeo ou Bootloader. O switch cuida do resto.  
+Use o Rollback: Se algo quebrar, escolha a versão anterior no menu de boot. É o seu "ponto de restauração" garantido.  
+Use a Busca: Pesquise nomes de pacotes em search.nixos.org.  
+
 ---
 
-
-
-
-
-
-
-
-
-
-
-3. Rotina do Usuário (Cronograma)
-Toda Semana: Rode sudo nixos-rebuild switch --upgrade para manter segurança e apps em dia.
-
-Uma vez por mês: Rode sudo nix-collect-garbage -d para não lotar o HD com versões antigas.
-
-
-
-
-
-
-**5. Regras de Ouro:**
-Guarde uma cópia do seu arquivo configuration.nix no seu Google Drive ou GitHub. Se você precisar formatar o PC um dia, basta colar esse arquivo em um NixOS novo e, em 5 minutos, o seu PC estará exatamente como era antes.
-
-Não reinicie à toa: Só é necessário para Kernel, Drivers de vídeo ou Bootloader. O switch cuida do resto.
-
-Use o Rollback: Se algo quebrar, escolha a versão anterior no menu de boot. É o seu "ponto de restauração" garantido.
-
-Use a Busca: Pesquise nomes de pacotes em search.nixos.org.
 
