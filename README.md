@@ -222,8 +222,4 @@ Não reinicie à toa: Só é necessário para Kernel, Drivers de vídeo ou Bootl
 Use o Rollback se algo quebrar, escolha a versão anterior no menu de boot. É o seu "ponto de restauração" garantido.  
 Use a Busca: Pesquise nomes de pacotes em search.nixos.org.  
 
----
 
-# Configurações Linux em Geral.
-## Arquivos .txt.  
-*são dicas sobre linux, fique a vontade para usar.*
