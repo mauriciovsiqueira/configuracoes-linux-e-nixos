@@ -180,7 +180,7 @@ users.users.usuario = {
   # SEM o grupo "wheel", ele não consegue quebrar o sistema
   extraGroups = [ "networkmanager" "video" "audio" "lp" ]; # lp é para impressoras
 
-  # Para pacotes para o usuário em expecifico
+  # Para pacotes para o usuário em expecífico, caso queira deixar os programas do sistema (esse todos os usuários tem acesso).
   packages = with pkgs; [
     firefox
     libreoffice-fresh
